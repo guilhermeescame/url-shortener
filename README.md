@@ -5,6 +5,8 @@
 A microservices URL shortener, packaged to run on Kubernetes with continuous
 delivery via GitOps.
 
+![Shortening a URL and following the short link](docs/img/demo.gif)
+
 ## Architecture
 
 ```

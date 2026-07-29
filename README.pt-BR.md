@@ -5,6 +5,8 @@
 Encurtador de URLs em microserviços, empacotado para rodar em Kubernetes com
 entrega contínua via GitOps.
 
+![Encurtando uma URL e seguindo o link curto](docs/img/demo.gif)
+
 ## Arquitetura
 
 ```
