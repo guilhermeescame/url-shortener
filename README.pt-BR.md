@@ -95,3 +95,7 @@ em vez de sofrer OOM kill ou despejar links encurtados silenciosamente.
 - [ ] Pipeline de build e publicação de imagens com GitHub Actions
 - [ ] Entrega contínua declarativa com ArgoCD
 - [ ] Métricas e dashboards com Prometheus e Grafana
+
+## Licença
+
+[MIT](LICENSE)

@@ -94,3 +94,7 @@ instead of being OOM-killed or silently evicting shortened links.
 - [ ] Image build and publish pipeline with GitHub Actions
 - [ ] Declarative continuous delivery with ArgoCD
 - [ ] Metrics and dashboards with Prometheus and Grafana
+
+## License
+
+[MIT](LICENSE)
