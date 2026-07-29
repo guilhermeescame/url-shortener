@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f172a; color: #e2e8f0;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1e293b; padding: 2.5rem; border-radius: 12px;
+      width: 100%; max-width: 480px; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+    h1 { font-size: 1.5rem; margin-bottom: .5rem; }
+    p.sub { color: #94a3b8; margin-bottom: 1.5rem; font-size: .9rem; }
+    form { display: flex; gap: .5rem; }
+    input {
+      flex: 1; padding: .75rem 1rem; border-radius: 8px;
+      border: 1px solid #334155; background: #0f172a; color: #e2e8f0;
+      font-size: 1rem;
+    }
+    button {
+      padding: .75rem 1.25rem; border: none; border-radius: 8px;
+      background: #3b82f6; color: white; font-size: 1rem; cursor: pointer;
+    }
+    button:hover { background: #2563eb; }
+    #result {
+      margin-top: 1.25rem; padding: 1rem; border-radius: 8px;
+      background: #0f172a; display: none; word-break: break-all;
+    }
+    #result a { color: #60a5fa; }
+    #result.error { color: #f87171; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔗 URL Shortener</h1>
+    <p class="sub">Paste a long link and get a short one</p>
+    <form id="form">
+      <input id="url" type="url" placeholder="https://example.com/some-very-long-link" required>
+      <button type="submit">Shorten</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('url').value;
+      result.style.display = 'block';
+      result.className = '';
+      result.textContent = 'Shortening...';
+      try {
+        const res = await fetch('/api/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        if (!res.ok) throw new Error('Error ' + res.status);
+        const data = await res.json();
+        const shortUrl = window.location.origin + data.short_url;
+        result.innerHTML = `Short link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+      } catch (err) {
+        result.className = 'error';
+        result.textContent = 'Failed to shorten: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
