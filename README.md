@@ -73,6 +73,14 @@ atomicity against collisions.
 **Unprivileged container.** The API runs as a non-root user, a common
 requirement of cluster security policies.
 
+**Structured JSON logs to stdout.** The API emits one JSON object per event —
+access logs with latency, domain events, errors — following the twelve-factor
+principle of treating logs as an event stream. `docker logs` (and later
+`kubectl logs` and Loki) consume them without parsing hacks. Health check
+requests are excluded to keep the stream free of probe noise, and only the
+target host of shortened URLs is logged, never full query strings. Compose
+caps the json-file driver at 3 × 10 MB per container.
+
 **Resource constraints on every service.** CPU and memory limits mirror
 Kubernetes `resources.limits/requests`. Redis runs with `maxmemory` below its
 container limit and `noeviction` policy — it degrades with a clear error

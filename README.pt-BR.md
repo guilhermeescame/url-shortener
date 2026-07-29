@@ -74,6 +74,14 @@ para garantir atomicidade contra colisões.
 **Container sem privilégios.** A API roda como usuário não-root, requisito comum
 de políticas de segurança em clusters.
 
+**Logs estruturados em JSON no stdout.** A API emite um objeto JSON por evento —
+access logs com latência, eventos de domínio, erros — seguindo o princípio
+twelve-factor de tratar logs como fluxo de eventos. `docker logs` (e depois
+`kubectl logs` e Loki) consomem sem gambiarras de parsing. Requests de health
+check ficam fora do fluxo para não virar ruído de probe, e apenas o host de
+destino das URLs é logado, nunca query strings completas. O Compose limita o
+driver json-file a 3 × 10 MB por container.
+
 **Limites de recursos em todos os serviços.** Limites de CPU e memória espelham
 os `resources.limits/requests` do Kubernetes. O Redis roda com `maxmemory`
 abaixo do limite do container e política `noeviction` — degrada com erro claro

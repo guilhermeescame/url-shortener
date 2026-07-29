@@ -1,8 +1,17 @@
+# Rotation prevents unbounded growth of the json-file logs on disk
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   api:
     build: ./api
     environment:
       REDIS_HOST: redis
+      LOG_LEVEL: INFO
+    logging: *default-logging
     depends_on:
       redis:
         condition: service_healthy
@@ -26,6 +35,7 @@ services:
       - "8080:80"
     depends_on:
       - api
+    logging: *default-logging
     deploy:
       resources:
         limits:
@@ -39,6 +49,7 @@ services:
     image: redis:7-alpine
     volumes:
       - redis-data:/data
+    logging: *default-logging
     # maxmemory below the container limit: Redis manages its own memory
     # instead of being OOM-killed by the kernel
     command: ["redis-server", "--appendonly", "yes", "--maxmemory", "192mb", "--maxmemory-policy", "noeviction"]
