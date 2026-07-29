@@ -29,6 +29,30 @@ docker compose up --build
 
 The application is available at **http://localhost:8080**.
 
+## Running on Kubernetes (kind)
+
+Requires [kind](https://kind.sigs.k8s.io/) and `kubectl`.
+
+```bash
+# Cluster with ports 80/443 mapped to localhost, plus the ingress controller
+kind create cluster --name url-shortener --config kind-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+kubectl wait --namespace ingress-nginx --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller --timeout=120s
+
+# Build the images and load them into the cluster
+docker build -t url-shortener-api:0.1.0 ./api
+docker build -t url-shortener-frontend:0.1.0 ./frontend
+kind load docker-image url-shortener-api:0.1.0 --name url-shortener
+kind load docker-image url-shortener-frontend:0.1.0 --name url-shortener
+
+kubectl apply -f k8s/
+```
+
+The application is available at **http://localhost**. The Ingress routes
+`/api` and `/r` straight to the API service; everything else goes to the
+frontend.
+
 ## API
 
 | Method | Route               | Description                        |
@@ -73,6 +97,16 @@ atomicity against collisions.
 **Unprivileged container.** The API runs as a non-root user, a common
 requirement of cluster security policies.
 
+**Liveness and readiness probes with different scopes.** Readiness hits
+`/healthz`, which checks Redis: an API pod without its store leaves the Service
+rotation and receives no traffic. Liveness only checks the TCP port — if it
+also depended on Redis, a Redis outage would cascade into a restart loop of
+every API pod without fixing anything.
+
+**Redis as a StatefulSet.** Stable pod identity and a PersistentVolumeClaim per
+replica keep the data across pod restarts; Deployments are reserved for the
+stateless services.
+
 **Structured JSON logs to stdout.** The API emits one JSON object per event —
 access logs with latency, domain events, errors — following the twelve-factor
 principle of treating logs as an event stream. `docker logs` (and later
@@ -89,7 +123,7 @@ instead of being OOM-killed or silently evicting shortened links.
 ## Roadmap
 
 - [x] Containerization and local orchestration with Docker Compose
-- [ ] Kubernetes deployment: Deployments, Services, Ingress, and probes
+- [x] Kubernetes deployment: Deployments, Services, Ingress, and probes
 - [ ] Helm packaging with per-environment configuration
 - [ ] Image build and publish pipeline with GitHub Actions
 - [ ] Declarative continuous delivery with ArgoCD
