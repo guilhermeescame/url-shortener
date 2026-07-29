@@ -74,6 +74,11 @@ para garantir atomicidade contra colisões.
 **Container sem privilégios.** A API roda como usuário não-root, requisito comum
 de políticas de segurança em clusters.
 
+**Limites de recursos em todos os serviços.** Limites de CPU e memória espelham
+os `resources.limits/requests` do Kubernetes. O Redis roda com `maxmemory`
+abaixo do limite do container e política `noeviction` — degrada com erro claro
+em vez de sofrer OOM kill ou despejar links encurtados silenciosamente.
+
 ## Roadmap
 
 - [x] Containerização e orquestração local com Docker Compose

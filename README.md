@@ -73,6 +73,11 @@ atomicity against collisions.
 **Unprivileged container.** The API runs as a non-root user, a common
 requirement of cluster security policies.
 
+**Resource constraints on every service.** CPU and memory limits mirror
+Kubernetes `resources.limits/requests`. Redis runs with `maxmemory` below its
+container limit and `noeviction` policy — it degrades with a clear error
+instead of being OOM-killed or silently evicting shortened links.
+
 ## Roadmap
 
 - [x] Containerization and local orchestration with Docker Compose
