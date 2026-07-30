@@ -147,3 +147,10 @@ JSON log entries with request latency and domain events:
 ## License
 
 [MIT](LICENSE)
+
+## Connect
+
+Built by Guilherme Barbirato Escame while learning Kubernetes in the open.
+
+[GitHub](https://github.com/guilhermeescame) ·
+[LinkedIn](https://www.linkedin.com/in/guilherme-barbirato-escame-053bb6293/)
