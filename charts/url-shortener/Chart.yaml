@@ -1,0 +1,12 @@
+apiVersion: v2
+name: url-shortener
+description: Microservices URL shortener with FastAPI, nginx, and Redis
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - url-shortener
+  - microservices
+home: https://github.com/guilhermeescame/url-shortener
+maintainers:
+  - name: Guilherme Barbirato Escame

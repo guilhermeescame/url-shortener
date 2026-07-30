@@ -1,0 +1,31 @@
+config:
+  logLevel: WARNING
+
+api:
+  replicaCount: 4
+  image:
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 250m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+
+frontend:
+  replicaCount: 2
+  image:
+    pullPolicy: IfNotPresent
+
+redis:
+  maxmemory: 768mb
+  persistence:
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi

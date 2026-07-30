@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "url-shortener.fullname" . }}
+  labels:
+    {{- include "url-shortener.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - http:
+        paths:
+          {{/* API routes reach the api service directly, one hop less than
+          going through the frontend proxy */}}
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "url-shortener.componentName" (dict "root" $ "component" "api") }}
+                port:
+                  name: http
+          - path: /r
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "url-shortener.componentName" (dict "root" $ "component" "api") }}
+                port:
+                  name: http
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "url-shortener.componentName" (dict "root" $ "component" "frontend") }}
+                port:
+                  name: http
+      {{- with .Values.ingress.host }}
+      host: {{ . | quote }}
+      {{- end }}
+{{- end }}

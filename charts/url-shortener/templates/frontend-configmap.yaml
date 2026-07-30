@@ -1,0 +1,31 @@
+{{/*
+The nginx config is rendered here rather than baked into the image: the API
+service name carries the release prefix, so it is only known at install time.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "url-shortener.componentName" (dict "root" $ "component" "frontend") }}
+  labels:
+    {{- include "url-shortener.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+data:
+  default.conf: |
+    server {
+        listen 80;
+
+        location / {
+            root /usr/share/nginx/html;
+            index index.html;
+        }
+
+        location /api/ {
+            proxy_pass http://{{ include "url-shortener.componentName" (dict "root" $ "component" "api") }}:8000;
+            proxy_set_header Host $host;
+        }
+
+        location /r/ {
+            proxy_pass http://{{ include "url-shortener.componentName" (dict "root" $ "component" "api") }}:8000;
+            proxy_set_header Host $host;
+        }
+    }

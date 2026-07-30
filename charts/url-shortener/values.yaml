@@ -1,0 +1,64 @@
+nameOverride: ""
+fullnameOverride: ""
+
+# Shared application configuration, rendered into a ConfigMap
+config:
+  logLevel: INFO
+
+api:
+  replicaCount: 2
+  image:
+    repository: url-shortener-api
+    tag: "0.1.0"
+    # Never fails fast when the image was not loaded into the cluster,
+    # instead of silently attempting a registry pull
+    pullPolicy: Never
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: url-shortener-frontend
+    tag: "0.1.0"
+    pullPolicy: Never
+  resources:
+    requests:
+      cpu: 50m
+      memory: 16Mi
+    limits:
+      cpu: 250m
+      memory: 64Mi
+
+redis:
+  image:
+    repository: redis
+    tag: 7-alpine
+    pullPolicy: IfNotPresent
+  # Keep below the container memory limit so Redis manages its own memory
+  # instead of being OOM-killed by the kernel
+  maxmemory: 192mb
+  maxmemoryPolicy: noeviction
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  # Empty host serves on any hostname, which suits local clusters
+  host: ""
+  annotations: {}

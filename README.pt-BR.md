@@ -33,7 +33,7 @@ A aplicação fica disponível em **http://localhost:8080**.
 
 ## Executando no Kubernetes (kind)
 
-Requer [kind](https://kind.sigs.k8s.io/) e `kubectl`.
+Requer [kind](https://kind.sigs.k8s.io/), `kubectl` e [Helm](https://helm.sh/).
 
 ```bash
 # Cluster com as portas 80/443 mapeadas para localhost, mais o ingress controller
@@ -48,7 +48,23 @@ docker build -t url-shortener-frontend:0.1.0 ./frontend
 kind load docker-image url-shortener-api:0.1.0 --name url-shortener
 kind load docker-image url-shortener-frontend:0.1.0 --name url-shortener
 
-kubectl apply -f k8s/
+helm install url-shortener charts/url-shortener \
+  --namespace url-shortener --create-namespace
+```
+
+### Ambientes e releases
+
+O chart traz um `values.yaml` base e sobreposições por ambiente:
+
+```bash
+helm install url-shortener charts/url-shortener -n url-shortener --create-namespace \
+  -f charts/url-shortener/values-dev.yaml     # 1 réplica, logs DEBUG, volume menor
+
+helm template url-shortener charts/url-shortener \
+  -f charts/url-shortener/values-prod.yaml    # renderiza a saída de produção sem aplicar
+
+helm history url-shortener -n url-shortener   # histórico de revisões
+helm rollback url-shortener 1 -n url-shortener
 ```
 
 A aplicação fica disponível em **http://localhost**. O Ingress roteia `/api` e
@@ -130,6 +146,17 @@ rotação do Service e não recebe tráfego. A liveness checa só a porta TCP �
 também dependesse do Redis, uma queda dele viraria um loop de restart em cascata
 de todos os pods da API, sem consertar nada.
 
+**Config do nginx renderizada pelo chart, não embutida na imagem.** O nome do
+Service da API carrega o prefixo da release, conhecido apenas no momento da
+instalação. A configuração vive num ConfigMap montado no pod do frontend, o que
+também permite duas releases coexistirem no mesmo cluster sem colisão.
+
+**Templates de pod carregam um checksum do seu ConfigMap.** Alterar um ConfigMap
+não reinicia pods sozinho — o processo mantém o valor antigo em memória. Colocar
+o hash do ConfigMap renderizado numa anotação do pod faz qualquer mudança de
+configuração gerar um novo template, e o `helm upgrade` dispara o rolling update
+automaticamente.
+
 **Redis como StatefulSet.** Identidade estável de pod e um PersistentVolumeClaim
 por réplica preservam os dados entre restarts; Deployments ficam reservados aos
 serviços sem estado.
@@ -164,7 +191,7 @@ Entradas de log JSON com latência de request e eventos de domínio:
 
 - [x] Containerização e orquestração local com Docker Compose
 - [x] Deploy em Kubernetes: Deployments, Services, Ingress e probes
-- [ ] Empacotamento com Helm e configuração por ambiente
+- [x] Empacotamento com Helm e configuração por ambiente
 - [ ] Pipeline de build e publicação de imagens com GitHub Actions
 - [ ] Entrega contínua declarativa com ArgoCD
 - [ ] Métricas e dashboards com Prometheus e Grafana
