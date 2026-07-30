@@ -67,6 +67,20 @@ helm history url-shortener -n url-shortener   # histórico de revisões
 helm rollback url-shortener 1 -n url-shortener
 ```
 
+<details>
+<summary>O mesmo chart em ambientes diferentes, e o rollback de uma release</summary>
+
+Renderização com os values padrão contra a sobreposição de dev — réplicas,
+nível de log e tamanho do volume acompanham o ambiente:
+
+![Saída do helm template comparando values padrão e de dev](docs/img/fase2-values-diff.png)
+
+Dois upgrades e um rollback, com todas as revisões preservadas:
+
+![helm history com quatro revisões terminando em rollback](docs/img/helm-history.png)
+
+</details>
+
 A aplicação fica disponível em **http://localhost**. O Ingress roteia `/api` e
 `/r` direto para o serviço da API; todo o resto vai para o frontend.
 
