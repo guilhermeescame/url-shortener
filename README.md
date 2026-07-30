@@ -189,9 +189,12 @@ JSON log entries with request latency and domain events:
 
 ## Roadmap
 
-- [x] Containerization and local orchestration with Docker Compose
-- [x] Kubernetes deployment: Deployments, Services, Ingress, and probes
-- [x] Helm packaging with per-environment configuration
+Each completed stage is tagged, so the raw manifests of one phase stay
+browsable after a later phase replaces them.
+
+- [x] Containerization and local orchestration with Docker Compose — [`phase-0-docker`](../../tree/phase-0-docker)
+- [x] Kubernetes deployment: Deployments, Services, Ingress, and probes — [`phase-1-kubernetes`](../../tree/phase-1-kubernetes)
+- [x] Helm packaging with per-environment configuration — [`phase-2-helm`](../../tree/phase-2-helm)
 - [ ] Image build and publish pipeline with GitHub Actions
 - [ ] Declarative continuous delivery with ArgoCD
 - [ ] Metrics and dashboards with Prometheus and Grafana

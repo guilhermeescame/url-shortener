@@ -189,9 +189,12 @@ Entradas de log JSON com latência de request e eventos de domínio:
 
 ## Roadmap
 
-- [x] Containerização e orquestração local com Docker Compose
-- [x] Deploy em Kubernetes: Deployments, Services, Ingress e probes
-- [x] Empacotamento com Helm e configuração por ambiente
+Cada etapa concluída tem uma tag, então os manifests crus de uma fase continuam
+navegáveis depois que uma fase seguinte os substitui.
+
+- [x] Containerização e orquestração local com Docker Compose — [`phase-0-docker`](../../tree/phase-0-docker)
+- [x] Deploy em Kubernetes: Deployments, Services, Ingress e probes — [`phase-1-kubernetes`](../../tree/phase-1-kubernetes)
+- [x] Empacotamento com Helm e configuração por ambiente — [`phase-2-helm`](../../tree/phase-2-helm)
 - [ ] Pipeline de build e publicação de imagens com GitHub Actions
 - [ ] Entrega contínua declarativa com ArgoCD
 - [ ] Métricas e dashboards com Prometheus e Grafana
