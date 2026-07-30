@@ -8,8 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY main.py .
 
-RUN useradd --create-home appuser
-USER appuser
+# Numeric UID: Kubernetes cannot verify runAsNonRoot against a username
+RUN useradd --create-home --uid 1000 appuser
+USER 1000
 
 EXPOSE 8000
 

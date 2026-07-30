@@ -55,6 +55,31 @@ The application is available at **http://localhost**. The Ingress routes
 `/api` and `/r` straight to the API service; everything else goes to the
 frontend.
 
+![Shortening a URL through the Ingress at localhost](docs/img/ingress.gif)
+
+<details>
+<summary>Self-healing, readiness draining, and persistent storage</summary>
+
+Deleting every API pod: the Deployment schedules replacements immediately.
+
+![kubectl get pods showing deleted API pods replaced automatically](docs/img/fase1-self-healing.png)
+
+Redis scaled to zero: API pods drop to `0/1` and leave the Service rotation,
+while `RESTARTS` stays at `0` — readiness drains traffic without liveness
+restarting anything.
+
+![API pods at 0/1 with zero restarts during a Redis outage](docs/img/fase1-readiness.png)
+
+The Redis volume claim, bound and surviving pod restarts:
+
+![kubectl get pvc showing data-redis-0 bound](docs/img/fase1-pvc.png)
+
+Steady state:
+
+![Four pods running in the url-shortener namespace](docs/img/k8s-pods-running.png)
+
+</details>
+
 ## API
 
 | Method | Route               | Description                        |

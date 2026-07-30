@@ -54,6 +54,31 @@ kubectl apply -f k8s/
 A aplicação fica disponível em **http://localhost**. O Ingress roteia `/api` e
 `/r` direto para o serviço da API; todo o resto vai para o frontend.
 
+![Encurtando uma URL através do Ingress em localhost](docs/img/ingress.gif)
+
+<details>
+<summary>Self-healing, drenagem por readiness e armazenamento persistente</summary>
+
+Apagando todos os pods da API: o Deployment agenda os substitutos na hora.
+
+![kubectl get pods mostrando pods da API substituídos automaticamente](docs/img/fase1-self-healing.png)
+
+Redis escalado para zero: os pods da API caem para `0/1` e saem da rotação do
+Service, enquanto `RESTARTS` permanece em `0` — a readiness drena o tráfego sem
+que a liveness reinicie nada.
+
+![Pods da API em 0/1 com zero restarts durante a queda do Redis](docs/img/fase1-readiness.png)
+
+O volume do Redis, ligado e sobrevivendo a restarts do pod:
+
+![kubectl get pvc mostrando data-redis-0 como Bound](docs/img/fase1-pvc.png)
+
+Estado estável:
+
+![Quatro pods rodando no namespace url-shortener](docs/img/k8s-pods-running.png)
+
+</details>
+
 ## API
 
 | Método | Rota                | Descrição                          |
