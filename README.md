@@ -122,6 +122,19 @@ Kubernetes `resources.limits/requests`. Redis runs with `maxmemory` below its
 container limit and `noeviction` policy — it degrades with a clear error
 instead of being OOM-killed or silently evicting shortened links.
 
+<details>
+<summary>Resource limits and structured logs in action</summary>
+
+Memory usage against the configured limits:
+
+![docker stats showing memory usage against each container limit](docs/img/fase0-docker-stats.png)
+
+JSON log entries with request latency and domain events:
+
+![JSON logs with duration_ms and target_host fields](docs/img/fase0-logs-json.png)
+
+</details>
+
 ## Roadmap
 
 - [x] Containerization and local orchestration with Docker Compose

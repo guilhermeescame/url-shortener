@@ -8,14 +8,24 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: system-ui, sans-serif;
-      background: #0f172a; color: #e2e8f0;
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh;
+      color: #e2e8f0;
+      background: linear-gradient(rgba(15,23,42,.60), rgba(15,23,42,.68)),
+                  url('/images/bg1.jpg') center/cover fixed no-repeat;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; padding: 1.5rem;
     }
     .card {
-      background: #1e293b; padding: 2.5rem; border-radius: 12px;
-      width: 100%; max-width: 480px; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+      background: rgba(30,41,59,.82); backdrop-filter: blur(8px);
+      border: 1px solid rgba(148,163,184,.15);
+      padding: 2.5rem; border-radius: 12px; margin: auto;
+      width: 100%; max-width: 960px; box-shadow: 0 10px 30px rgba(0,0,0,.4);
     }
+    footer {
+      display: flex; gap: .75rem; padding-top: 1.5rem;
+      color: #64748b; font-size: .875rem;
+    }
+    footer a { color: #94a3b8; text-decoration: none; }
+    footer a:hover { color: #60a5fa; text-decoration: underline; }
     h1 { font-size: 1.5rem; margin-bottom: .5rem; }
     p.sub { color: #94a3b8; margin-bottom: 1.5rem; font-size: .9rem; }
     form { display: flex; gap: .5rem; }
@@ -39,7 +49,7 @@
 </head>
 <body>
   <div class="card">
-    <h1>🔗 URL Shortener</h1>
+    <h1>🌐 URL Shortener</h1>
     <p class="sub">Paste a long link and get a short one</p>
     <form id="form">
       <input id="url" type="url" placeholder="https://example.com/some-very-long-link" required>
@@ -47,6 +57,12 @@
     </form>
     <div id="result"></div>
   </div>
+
+  <footer>
+    <a href="https://github.com/guilhermeescame" target="_blank" rel="noopener">GitHub</a>
+    <span>·</span>
+    <a href="https://www.linkedin.com/in/guilherme-barbirato-escame-053bb6293/" target="_blank" rel="noopener">LinkedIn</a>
+  </footer>
 
   <script>
     const form = document.getElementById('form');
