@@ -150,7 +150,7 @@ Entradas de log JSON com latência de request e eventos de domínio:
 
 ## Contato
 
-Feito por Guilherme Barbirato Escame durante o aprendizado de Kubernetes.
+Feito por Guilherme Barbirato Escame como prática de aprendizado de Kubernetes.
 
 [GitHub](https://github.com/guilhermeescame) ·
 [LinkedIn](https://www.linkedin.com/in/guilherme-barbirato-escame-053bb6293/)
